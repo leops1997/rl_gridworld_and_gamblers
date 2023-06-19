@@ -36,6 +36,7 @@ class Gambler:
         Theta will determine accuracy of estimation
         """
         delta = 0
+        self.pi = []
         p = np.zeros(101)
         while delta < self.theta:
             for capital in range(1,100):
@@ -49,30 +50,17 @@ class Gambler:
                 self.value[capital] = max(p)
                 # Update delta
                 delta = max(delta, abs(previous_value - self.value[capital]))
+                # Store the new optimal policy
+                self.pi.append(np.argmax(p))
         # Store the new values
         self.values_recorded.append(self.value.copy())
-                
-    def policy(self):
-        """
-        Output the optimal policy
-        """
-        self.pi = []
-        p = np.zeros(101)
-        for capital in range(1,100):
-            # Bet value with minimum of 1 and maximum of 100 - capital
-            for bet in range(1, min(capital, 100 - capital)+1): 
-                # Calculates the value of a bet(action) from a current amount of money(state)
-                p[bet] = self.prob*(self.reward[capital + bet] + self.value[capital + bet]) + (1-self.prob)*(self.reward[capital - bet] + self.value[capital - bet])
-            # Store the new optimal policy
-            self.pi.append(np.argmax(p))
 
     def compute(self):
         """
         Compute the successive iterations and the final policy
         """
-        for i in range(self.iterations):
+        for _ in range(self.iterations):
             self.value_iteration()
-            self.policy()
         self.plot_results()
 
     def plot_results(self):
@@ -83,7 +71,8 @@ class Gambler:
         for data in self.values_recorded:
             plt.plot(data[:99])
         labels = ['Iteration {}'.format(i+1) for i in range(len(self.values_recorded))]
-        plt.legend(labels)
+        legend = plt.legend(labels, loc='center left', bbox_to_anchor=(1, 0.5))
+        plt.gca().add_artist(legend)
         plt.xlabel('Capital')
         plt.ylabel('Value Estimates')
         plt.subplot(2, 1, 2)
@@ -94,5 +83,5 @@ class Gambler:
 
 
 if __name__ == "__main__":
-    g = Gambler(0.4, 5) 
+    g = Gambler(0.4, 10) 
     g.compute()
