@@ -23,7 +23,7 @@ class Gambler:
     def __init__(self, prob, iterations, theta=0.00000001):
         self.value = np.zeros(101) # Set a list of 100 values 0
         self.reward = np.zeros(101) # Set a list of 100 values 0
-        self.reward[100] = 1 # Set 1 on the last element
+        self.value[100] = 1 # Set 1 on the last element
         self.values_recorded = []
         self.pi = []
         self.prob = prob
@@ -83,5 +83,5 @@ class Gambler:
 
 
 if __name__ == "__main__":
-    g = Gambler(0.4, 10) 
+    g = Gambler(0.4, 14) 
     g.compute()
