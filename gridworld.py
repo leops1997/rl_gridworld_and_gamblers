@@ -5,7 +5,7 @@ Entrega #4 - Dynamic Programming - Value iteration Gambler's Problem
 
 @author: Leonardo Pezenatto da Silva
 @email: leonardo.pezenatto@posgrad.ufsc.br
-@date: Jun 18, 2023
+@date: Jun 20, 2023
 """
 
 import numpy as np
@@ -15,7 +15,9 @@ print(__doc__)
 
 class GridWorld:
     """
-       
+    Class GridWorld.
+    Have all methods needed to implement the Grid World example
+    with policy evaluation and policy evaluation.  
     """
     def __init__(self, grid_size, prob, discount, theta=0.00000001):
         self.value_recorded = []
@@ -41,12 +43,19 @@ class GridWorld:
         self.reward[0] = 0 
         self.reward[self.num_states - 1] = 0 
 
+        # Create a random matrix to be the first policy
         self.policy = np.random.randint(0, 4, size=(int(np.sqrt(self.num_states)), int(np.sqrt(self.num_states))))
 
+        # Transform vector to matrix
         self.value_grid = self.value.reshape(int(np.sqrt(self.num_states)),int(np.sqrt(self.num_states)))
         self.grid_rows, self.grid_columns = self.value_grid.shape
         
     def next_state(self, state_index, action):
+        """
+        Class GridWorld.
+        Have all methods needed to implement the Grid World example
+        with policy evaluation and policy evaluation.  
+        """
         if action == 0: # Up
             new_row = max(0, state_index[0] - 1)
             new_columns = state_index[1]
@@ -63,7 +72,7 @@ class GridWorld:
       
     def policy_evaluation(self):
         """
-       
+        Policy evaluation, for estimating values.
         """
         delta = 0
         p = np.zeros(4)
@@ -94,6 +103,9 @@ class GridWorld:
         self.value_recorded.append(self.value_grid.copy())
 
     def policy_improvement(self):
+        """
+        Improve the policy
+        """
         p = np.zeros(4)
         policy_stable = True
         for row in range(self.grid_rows):
@@ -121,6 +133,7 @@ class GridWorld:
     def compute(self):
         """
         Compute the successive iterations and the final policy
+        until policy get stable
         """
         self.setup()
         policy_stable = False
@@ -133,6 +146,9 @@ class GridWorld:
         
 
     def plot_gridworld(self, k):
+        """
+        Plot on a graph the value matrix and the policy matrix
+        """
         arrows = ['↑', '↓', '←', '→']
         fig, (ax1, ax2) = plt.subplots(1, 2)
         fig.suptitle('Value and Policy k = '+ str(k), fontsize=16)
@@ -165,5 +181,5 @@ class GridWorld:
         plt.show()
 
 if __name__ == "__main__":
-    g = GridWorld(4*4, 0.25, 1)
+    g = GridWorld(4*4, 1, 1)
     g.compute()
